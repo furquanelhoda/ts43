@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المهندس للنص العربي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        /* إعداد الصفحة بالكامل */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px; /* للتحكم في الحجم الأقصى */
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .input-area {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .display-area {
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #currentChar {
+            font-size: 2.5rem;
+            color: #2c3e50;
+        }
+
+        .char-image {
+            width: 100px;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        #noteLegend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .legend-item {
+            padding: 8px 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-size: 0.875rem;
+        }
+
+        #geometryCanvas {
+            width: 100%;
+            height: 300px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            direction: ltr !important;
+        }
+
+        @media (max-width: 768px) {
+            textarea {
+                font-size: 0.9rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>العزف الموسيقي للنص العربي</h1>
+
+        <div class="input-area">
+            <textarea id="textInput" placeholder="اكتب النص العربي هنا..."></textarea>
+        </div>
+        <canvas id="geometryCanvas"></canvas>
+
+        <div class="display-area" id="displayArea">
+            <div id="currentChar"></div>
+            <img id="charImage" class="char-image" src="" alt="" style="display:none;">
+        </div>
+
+        <div class="controls">
+            <button onclick="playText()">قراءة النص</button>
+            <button onclick="stopPlaying()">إيقاف</button>
+            <button id="downloadButton">تحميل الصوت</button>
+        </div>
+
+        <div class="legend">
+            <h3>مفتاح الكتابة بالرموز المقدسة :</h3>
+            <div id="noteLegend"></div>
+        </div>
+    </div>
+
+    <script>
+       
+       const notes = {
+
+
+    'أ': { note: 'C4', tone: '8n',symbole:'', value: '13', image: 'img/a.png' },
+    'إ': { note: 'C4', tone: '8n',symbole:'', value: '13', image: 'img/a.png' },
+    'ا': { note: 'C4', tone: '8n',symbole:'', value: '13', image: 'img/a.png' },
+    'ؤ': { note: 'C4', tone: '8n',symbole:'', value: '13', image: 'img/a.png' },
+    'ئ': { note: 'C4', tone: '8n',symbole:'', value: '13', image: 'img/a.png' },
+    'ء': { note: 'C4', tone: '8n',symbole:'', value: '13', image: 'img/a.png' },
+    'ى': { note: 'C4', tone: '8n',symbole:'', value: '13', image: 'img/a.png' },
+    'ح': { note: 'A4', tone: '8n',symbole:'', value: '7', image: 'img/h.png' },
+    'ر': { note: 'E5', tone: '8n',symbole:'', value: '6', image: 'img/r.png' },
+    'س': { note: 'G5', tone: '8n',symbole:'', value: '5', image: 'img/s.png' },
+    'ص': { note: 'B5', tone: '8n',symbole:'', value: '3', image: 'img/sad.png' },
+    'ط': { note: 'D6', tone: '8n',symbole:'', value: '4', image: 'img/tah.png' },
+    'ع': { note: 'F6', tone: '8n',symbole:'', value: '2', image: 'img/aain.png' },
+    'ق': { note: 'B6', tone: '8n',symbole:'', value: '2', image: 'img/qaf.png' },
+    'ك': { note: 'C7', tone: '8n',symbole:'', value: '1', image: 'img/kaf.png' },
+    'ل': { note: 'D7', tone: '8n',symbole:'', value: '13', image: 'img/lm.png' },
+    'م': { note: 'E7', tone: '8n',symbole:'', value: '17', image: 'img/mem.png' },
+    'ن': { note: 'F7', tone: '8n',symbole:'', value: '1', image: 'img/nun.png' },
+    'ه': { note: 'G7', tone: '8n',symbole:'', value: '2', image: 'img/hh.png' },
+    'ي': { note: 'B7', tone: '8n',symbole:'', value: '2', image: 'img/ya.png' }
+};
+      
+
+        let isPlaying = false;
+        let synth = null;
+
+        const canvas = document.getElementById('geometryCanvas');
+        const ctx = canvas.getContext('2d');
+        const textInput = document.getElementById('textInput');
+        const downloadButton = document.getElementById('downloadButton');
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        function generateGeometricVisualization() {
+    resizeCanvas();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const input = textInput.value.trim();
+    const points = [];
+
+    for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+        if (notes[char]) {
+            // التعديل هنا: رسم النقاط من اليمين إلى اليسار
+            const x = canvas.width - ((i + 1) * (canvas.width / (input.length + 1)));
+            const y = canvas.height - (Number(notes[char].value) * (canvas.height / 30));
+
+            points.push({ x, y, char });
+
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, Math.PI * 2);
+            ctx.fillStyle = `hsl(${i * 15}, 70%, 60%)`;
+            ctx.fill();
+
+            ctx.fillStyle = '#000';
+            ctx.font = '14px Tajawal';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(char, x, y);
+        }
+    }
+
+    if (points.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.strokeStyle = '#3498db';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+}
+
+        async function playText() {
+            if (isPlaying) {
+                stopPlaying();
+                return;
+            }
+
+            const text = textInput.value.trim();
+            const currentChar = document.getElementById('currentChar');
+
+            isPlaying = true;
+            synth = new Tone.Synth().toDestination();
+            await Tone.start();
+
+            for (let i = 0; i < text.length && isPlaying; i++) {
+                const char = text[i];
+                if (notes[char]) {
+                    currentChar.textContent = char;
+
+                    const charImage = document.getElementById('charImage');
+                    charImage.src = notes[char].image;
+                    charImage.style.display = "block";
+
+                    synth.triggerAttackRelease(notes[char].note, notes[char].tone);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            }
+
+            stopPlaying();
+        }
+
+        function stopPlaying() {
+            isPlaying = false;
+
+            if (synth) {
+                synth.dispose();
+                synth = null;
+            }
+
+            document.getElementById('currentChar').textContent = '';
+            document.getElementById('charImage').style.display = "none";
+        }
+
+        async function downloadAudio() {
+            const text = textInput.value.trim();
+            if (!text) {
+                alert("يرجى كتابة نص يحتوي على أحرف عربية لتحميل الصوت.");
+                return;
+            }
+
+            await Tone.start();
+            const audioContext = Tone.getContext().rawContext;
+            const destination = audioContext.createMediaStreamDestination();
+            const synth = new Tone.Synth().toDestination();
+            synth.connect(destination);
+
+            const mediaRecorder = new MediaRecorder(destination.stream);
+            const chunks = [];
+
+            mediaRecorder.ondataavailable = (event) => {
+                chunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/wav' });
+                const url = URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.download = 'musical_text.wav';
+                anchor.href = url;
+                anchor.click();
+            };
+
+            mediaRecorder.start();
+
+            const now = Tone.now();
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (notes[char]) {
+                    synth.triggerAttackRelease(notes[char].note, "8n", now + i *0.5);
+                }
+            }
+
+            setTimeout(() => {
+                mediaRecorder.stop();
+            }, text.length * 500 + 100);
+        }
+
+        textInput.addEventListener('input', generateGeometricVisualization);
+        downloadButton.addEventListener('click', downloadAudio);
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+
+</html>

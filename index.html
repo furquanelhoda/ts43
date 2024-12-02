@@ -1,148 +1,292 @@
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>المهندس  الحرفي</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; font-family: 'Tajawal', sans-serif; }
-body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); display: flex; align-items: center; justify-content: center; }
-.container { width: 100%; max-width: 1200px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
-h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 2rem; }
-textarea { width: 100%; height: 150px; padding: 15px; border: 2px solid #3498db; border-radius: 10px; resize: vertical; }
-.display-area { width: 100%; background: #f8f9fa; border-radius: 10px; margin: 20px 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-#currentChar { font-size: 2.5rem; color: #2c3e50; }
-.char-image { width: 100px; height: auto; margin-top: 10px; }
-button { padding: 12px 25px; font-size: 1rem; border: none; border-radius: 8px; background: #3498db; color: white; cursor: pointer; transition: 0.3s; }
-button:hover { background: #2980b9; transform: translateY(-2px); }
-#geometrycanvas43 { width: 100%; height: 200px; background-color: #f1f1f1; border-radius: 10px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); direction: ltr !important; }
-@media (max-width: 768px) { textarea { font-size: 0.9rem; } button { font-size: 0.9rem; } h1 { font-size: 1.5rem; } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المهندس الحرفي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; font-family: 'Tajawal', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); display: flex; align-items: center; justify-content: center; }
+        .container { width: 100%; max-width: 1200px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 2rem; }
+        textarea { width: 100%; height: 150px; padding: 15px; border: 2px solid #3498db; border-radius: 10px; resize: vertical; }
+        .display-area { width: 100%; background: #f8f9fa; border-radius: 10px; margin: 20px 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        #currentChar { font-size: 2.5rem; color: #2c3e50; }
+        .char-image { width: 100px; height: auto; margin-top: 10px; }
+        button { padding: 12px 25px; font-size: 1rem; border: none; border-radius: 8px; background: #3498db; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #2980b9; transform: translateY(-2px); }
+        #geometrycanvas43 { width: 100%; height: 200px; background-color: #f1f1f1; border-radius: 10px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); direction: ltr !important; }
+        .button-group { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; justify-content: center; }
+        .button-group button { padding: 8px 16px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        .button-group button:hover { background-color: #2980b9; }
+        @media (max-width: 768px) { textarea { font-size: 0.9rem; } button { font-size: 0.9rem; } h1 { font-size: 1.5rem; } }
+    </style>
 </head>
 <body>
 <div class="container">
-<h1> هندسة الحروف النورانية القرآن الكريم  الجامع الشامل (عليون) </h1>
-<div>
-<label>
-<input type="checkbox" id="toggleRepeat" />
-تفعيل تكرار الحروف بناءً على القيم(الشامل عليون)
-</label>
-</div>
+    <h1> هندسة الحروف النورانية القرآن الكريم الجامع الشامل (عليون) </h1>
+    <div>
+        <label>
+            <input type="checkbox" id="toggleRepeat" />
+            تفعيل تكرار الحروف بناءً على القيم(الشامل عليون)
+        </label>
+    </div>
 
-<textarea id="textInput" placeholder="اكتب النص العربي هنا..."></textarea>
-<canvas id="geometrycanvas43"></canvas43>
+    <textarea id="textInput" placeholder="اكتب النص العربي هنا..."></textarea>
+    <div class="button-group">
+        <button onclick="changeNotesSet('عليون')">عليون</button>
+        <button onclick="changeNotesSet('شامل')">شامل</button>
+        <button onclick="changeNotesSet('فرقان(1)')">فرقان(1)</button>
+        <button onclick="changeNotesSet('فرقان(2)')">فرقان(2)</button>
+        <button onclick="changeNotesSet('فرقان(3)')">فرقان(3)</button>
+        <button onclick="changeNotesSet('فرقان(4)')">فرقان(4)</button>
+        <button onclick="changeNotesSet('فرقان(5)')">فرقان(5)</button>
+        <button onclick="changeNotesSet('فرقان(6)')">فرقان(6)</button>
+    </div>
+    <canvas id="geometrycanvas43"></canvas>
 
-<div class="display-area" id="displayArea">
-<div id="currentChar"></div>
-<img id="charImage" class="char-image" src="" alt="" style="display:none;">
-</div>
+    <div class="display-area" id="displayArea">
+        <div id="currentChar"></div>
+        <img id="charImage" class="char-image" src="" alt="" style="display:none;">
+    </div>
 </div>
 
 <script>
-const notes = {
-  'أ': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'آ': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'إ': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'ا': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'ؤ': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'ء': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'ئ': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'ى': { value: '13', color: 'hsl(0, 70%, 50%)' },      // أحمر
-  'ل': { value: '13', color: 'hsl(30, 70%, 50%)' },     // برتقالي
-  'ر': { value: '6', color: 'hsl(60, 70%, 50%)' },      // أصفر
-  'ك': { value: '1', color: 'hsl(120, 70%, 50%)' },     // أخضر
-  'ه': { value: '2', color: 'hsl(180, 70%, 50%)' },     // تركواز
-  'ي': { value: '2', color: 'hsl(240, 70%, 50%)' },     // أزرق
-  'ع': { value: '2', color: 'hsl(270, 70%, 50%)' },     // بنفسجي
-  'ص': { value: '3', color: 'hsl(300, 70%, 50%)' },     // أرجواني
-  'ط': { value: '4', color: 'hsl(360, 70%, 50%)' },     // وردي
-  'س': { value: '5', color: 'hsl(20, 70%, 50%)' },      // ذهبي
-  'ح': { value: '7', color: 'hsl(75, 70%, 50%)' },      // أخضر فاتح
-  'م': { value: '17', color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
-  'ق': { value: '2', color: 'hsl(150, 70%, 50%)' },     // أخضر مائل للأزرق
-  'ن': { value: '1', color: 'hsl(285, 70%, 50%)' }      // بنفسجي مائل للأزرق
-};
-const canvas43 = document.getElementById('geometrycanvas43');
-const ctx43 = canvas43.getContext('2d');
-const textInput = document.getElementById('textInput');
-const toggleRepeat = document.getElementById('toggleRepeat');
+    const noteSets = {
+        'عليون': {
+            'أ': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' },  // أحمر
+            'آ': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'إ': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ا': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ؤ': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ء': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ئ': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ى': { note: 'C4', tone: '8n',symbole:'',value: '13', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ح': {note: 'A4', tone: '8n',symbole:'', note: 'A4',  tone: '8n',symbole:'', value: '7', image: 'img/h.png' , color: 'hsl(75, 70%, 50%)' },      // أخضر فاتح
+            'ر': {note: 'E5', tone: '8n',symbole:'', note: 'E5', tone: '8n',symbole:'', value: '6', image: 'img/r.png'  , color: 'hsl(60, 70%, 50%)' },      // أصفر
 
-function resizecanvas43() {
-canvas43.width = canvas43.offsetWidth;
-canvas43.height = canvas43.offsetHeight;
-}
+            'س': {note: 'G5', tone: '8n',symbole:'', note: 'G5', tone: '8n',symbole:'', value: '5', image: 'img/s.png'  , color: 'hsl(20, 70%, 50%)' },      // ذهبي
+            'ص': {note: 'B5', tone: '8n',symbole:'', note: 'B5', tone: '8n',symbole:'', value: '3', image: 'img/sad.png' , color: 'hsl(300, 70%, 50%)' },     // أرجواني
+            'ط': {note: 'D6', tone: '8n',symbole:'', note: 'D6', tone: '8n',symbole:'', value: '4', image: 'img/tah.png' , color: 'hsl(360, 70%, 50%)' },     // وردي
+            'ع': {note: 'F6', tone: '8n',symbole:'', note: 'F6', tone: '8n',symbole:'', value: '2', image: 'img/aain.png', color: 'hsl(270, 70%, 50%)' },     // بنفسجي
+            'ق': {note: 'B6', tone: '8n',symbole:'', note: 'B6', tone: '8n',symbole:'', value: '2', image: 'img/qaf.png'  , color: 'hsl(150, 70%, 50%)' },     // أخضر مائل للأزرق
 
-function generateTextBasedOnRepeat() {
-const input = textInput.value.trim();
-let output = '';
-for (let char of input) {
-if (notes[char] && toggleRepeat.checked) {
-output += char.repeat(Number(notes[char].value));
-} else {
-output += char;
-}
-}
-return output;
-}
-// const notes = {
-//   'أ': { value: '13', color: 'hsl(0, 70%, 60%)' },
-//   'ل': { value: '13', color: 'hsl(24, 70%, 60%)' },
-//   'ر': { value: '6', color: 'hsl(48, 70%, 60%)' },
-//   'ك': { value: '1', color: 'hsl(72, 70%, 60%)' },
-//   // إضافة بقية الأحرف بنفس الطريقة
-// };
+            'ك': {note: 'C7', tone: '8n',symbole:'', note: 'C7', tone: '8n',symbole:'', value: '1', image: 'img/kaf.png' , color: 'hsl(120, 70%, 50%)' },     // أخضر
 
-function generateGeometricVisualization() {
-  resizecanvas43();
-  ctx43.clearRect(0, 0, canvas43.width, canvas43.height);
+            'ل': {note: 'D7', tone: '8n',symbole:'', note: 'D7', tone: '8n',symbole:'', value: '13', image: 'img/lm.png' , color: 'hsl(30, 70%, 50%)' },     // برتقالي
+            'م': {note: 'E7', tone: '8n',symbole:'', note: 'E7', tone: '8n',symbole:'', value: '17', image: 'img/mem.png' , color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
+            'ن': {note: 'F7', tone: '8n',symbole:'', note: 'F7', tone: '8n',symbole:'', value: '1', image: 'img/nun.png'  , color: 'hsl(285, 70%, 50%)' },      // بنفسجي مائل للأزرق
+            'ه': {note: 'G7', tone: '8n',symbole:'', note: 'G7', tone: '8n',symbole:'', value: '2', image: 'img/hh.png' , color: 'hsl(180, 70%, 50%)' },     // تركواز
+            'ي': {note: 'B7', tone: '8n',symbole:'', note: 'B7', tone: '8n',symbole:'', value: '2', image: 'img/ya.png' , color: 'hsl(240, 70%, 50%)' }     // أزرق
+        },
+        'شامل': {
+         
+            'أ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' },  // أحمر
+            'آ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'إ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ا': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ؤ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ء': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ئ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ى': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ح': {note: 'A4', tone: '8n',symbole:'', note: 'A4',  tone: '8n',symbole:'', value: '1', image: 'img/h.png' , color: 'hsl(75, 70%, 50%)' },      // أخضر فاتح
+            'ر': {note: 'E5', tone: '8n',symbole:'', note: 'E5', tone: '8n',symbole:'', value: '1', image: 'img/r.png'  , color: 'hsl(60, 70%, 50%)' },      // أصفر
 
-  const input = generateTextBasedOnRepeat();
-  const points = [];
+            'س': {note: 'G5', tone: '8n',symbole:'', note: 'G5', tone: '8n',symbole:'', value: '1', image: 'img/s.png'  , color: 'hsl(20, 70%, 50%)' },      // ذهبي
+            'ص': {note: 'B5', tone: '8n',symbole:'', note: 'B5', tone: '8n',symbole:'', value: '1', image: 'img/sad.png' , color: 'hsl(300, 70%, 50%)' },     // أرجواني
+            'ط': {note: 'D6', tone: '8n',symbole:'', note: 'D6', tone: '8n',symbole:'', value: '1', image: 'img/tah.png' , color: 'hsl(360, 70%, 50%)' },     // وردي
+            'ع': {note: 'F6', tone: '8n',symbole:'', note: 'F6', tone: '8n',symbole:'', value: '1', image: 'img/aain.png', color: 'hsl(270, 70%, 50%)' },     // بنفسجي
+            'ق': {note: 'B6', tone: '8n',symbole:'', note: 'B6', tone: '8n',symbole:'', value: '1', image: 'img/qaf.png'  , color: 'hsl(150, 70%, 50%)' },     // أخضر مائل للأزرق
 
-  for (let i = 0; i < input.length; i++) {
-    const char = input[i];
-    if (notes[char]) {
-      const x = canvas43.width - ((i + 1) * (canvas43.width / (input.length + 1)));
-      const y = canvas43.height - (Number(notes[char].value) * (canvas43.height / 30));
+            'ك': {note: 'C7', tone: '8n',symbole:'', note: 'C7', tone: '8n',symbole:'', value: '1', image: 'img/kaf.png' , color: 'hsl(120, 70%, 50%)' },     // أخضر
 
-      points.push({ x, y, char });
+            'ل': {note: 'D7', tone: '8n',symbole:'', note: 'D7', tone: '8n',symbole:'', value: '1', image: 'img/lm.png' , color: 'hsl(30, 70%, 50%)' },     // برتقالي
+            'م': {note: 'E7', tone: '8n',symbole:'', note: 'E7', tone: '8n',symbole:'', value: '1', image: 'img/mem.png' , color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
+            'ن': {note: 'F7', tone: '8n',symbole:'', note: 'F7', tone: '8n',symbole:'', value: '1', image: 'img/nun.png'  , color: 'hsl(285, 70%, 50%)' },      // بنفسجي مائل للأزرق
+            'ه': {note: 'G7', tone: '8n',symbole:'', note: 'G7', tone: '8n',symbole:'', value: '1', image: 'img/hh.png' , color: 'hsl(180, 70%, 50%)' },     // تركواز
+            'ي': {note: 'B7', tone: '8n',symbole:'', note: 'B7', tone: '8n',symbole:'', value: '1', image: 'img/ya.png' , color: 'hsl(240, 70%, 50%)' }     // أزرق
+        },
+        'فرقان(1)': {
+          
+            'أ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' },  // أحمر
+            'آ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'إ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ا': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ؤ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ء': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ئ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ى': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ر': {note: 'E5', tone: '8n',symbole:'', note: 'E5', tone: '8n',symbole:'', value: '1', image: 'img/r.png'  , color: 'hsl(60, 70%, 50%)' },      // أصفر
 
-      ctx43.beginPath();
-      ctx43.arc(x, y, 8, 0, Math.PI * 2);
-      ctx43.fillStyle = notes[char].color; // استخدام اللون المحدد للحرف
-      ctx43.fill();
+          
+            'ل': {note: 'D7', tone: '8n',symbole:'', note: 'D7', tone: '8n',symbole:'', value: '1', image: 'img/lm.png' , color: 'hsl(30, 70%, 50%)' },     // برتقالي
+            'م': {note: 'E7', tone: '8n',symbole:'', note: 'E7', tone: '8n',symbole:'', value: '1', image: 'img/mem.png' , color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
+           
+        },
+        'فرقان(2)': {
+        
+            'أ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' },  // أحمر
+            'آ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'إ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ا': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ؤ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ء': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ئ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ى': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ل': {note: 'D7', tone: '8n',symbole:'', note: 'D7', tone: '8n',symbole:'', value: '1', image: 'img/lm.png' , color: 'hsl(30, 70%, 50%)' },     // برتقالي
+            'م': {note: 'E7', tone: '8n',symbole:'', note: 'E7', tone: '8n',symbole:'', value: '1', image: 'img/mem.png' , color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
+            'ن': {note: 'F7', tone: '8n',symbole:'', note: 'F7', tone: '8n',symbole:'', value: '1', image: 'img/nun.png'  , color: 'hsl(285, 70%, 50%)' },      // بنفسجي مائل للأزرق
 
-      ctx43.fillStyle = '#000';
-      ctx43.font = '14px Tajawal';
-      ctx43.textAlign = 'center';
-      ctx43.textBaseline = 'middle';
-      ctx43.fillText(char, x, y);
+        },
+        'فرقان(3)': {
+                 
+            'أ': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' },  // أحمر
+            'آ': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'إ': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ا': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ؤ': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ء': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ئ': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ى': { note: 'C4', tone: '8n',symbole:'',value: '8', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ح': {note: 'A4', tone: '8n',symbole:'', note: 'A4',  tone: '8n',symbole:'', value: '4', image: 'img/h.png' , color: 'hsl(75, 70%, 50%)' },      // أخضر فاتح
+            'ر': {note: 'E5', tone: '8n',symbole:'', note: 'E5', tone: '8n',symbole:'', value: '4', image: 'img/r.png'  , color: 'hsl(60, 70%, 50%)' },      // أصفر
+            'س': {note: 'G5', tone: '8n',symbole:'', note: 'G5', tone: '8n',symbole:'', value: '4', image: 'img/s.png'  , color: 'hsl(20, 70%, 50%)' },      // ذهبي
+            'ط': {note: 'D6', tone: '8n',symbole:'', note: 'D6', tone: '8n',symbole:'', value: '4', image: 'img/tah.png' , color: 'hsl(360, 70%, 50%)' },     // وردي
+            'ع': {note: 'F6', tone: '8n',symbole:'', note: 'F6', tone: '8n',symbole:'', value: '1', image: 'img/aain.png', color: 'hsl(270, 70%, 50%)' },     // بنفسجي
+            'ق': {note: 'B6', tone: '8n',symbole:'', note: 'B6', tone: '8n',symbole:'', value: '1', image: 'img/qaf.png'  , color: 'hsl(150, 70%, 50%)' },     // أخضر مائل للأزرق
+            'ل': {note: 'D7', tone: '8n',symbole:'', note: 'D7', tone: '8n',symbole:'', value: '8', image: 'img/lm.png' , color: 'hsl(30, 70%, 50%)' },     // برتقالي
+            'م': {note: 'E7', tone: '8n',symbole:'', note: 'E7', tone: '8n',symbole:'', value: '10', image: 'img/mem.png' , color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
+            'ه': {note: 'G7', tone: '8n',symbole:'', note: 'G7', tone: '8n',symbole:'', value: '1', image: 'img/hh.png' , color: 'hsl(180, 70%, 50%)' },     // تركواز
+
+        },
+        'فرقان(4)': {
+                  
+            'أ': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' },  // أحمر
+            'آ': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'إ': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ا': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ؤ': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ء': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ئ': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ى': { note: 'C4', tone: '8n',symbole:'',value: '2', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ح': {note: 'A4', tone: '8n',symbole:'', note: 'A4',  tone: '8n',symbole:'', value: '1', image: 'img/h.png' , color: 'hsl(75, 70%, 50%)' },      // أخضر فاتح
+            'س': {note: 'G5', tone: '8n',symbole:'', note: 'G5', tone: '8n',symbole:'', value: '1', image: 'img/s.png'  , color: 'hsl(20, 70%, 50%)' },      // ذهبي
+            'ص': {note: 'B5', tone: '8n',symbole:'', note: 'B5', tone: '8n',symbole:'', value: '1', image: 'img/sad.png' , color: 'hsl(300, 70%, 50%)' },     // أرجواني
+            'ل': {note: 'D7', tone: '8n',symbole:'', note: 'D7', tone: '8n',symbole:'', value: '2', image: 'img/lm.png' , color: 'hsl(30, 70%, 50%)' },     // برتقالي
+            'م': {note: 'E7', tone: '8n',symbole:'', note: 'E7', tone: '8n',symbole:'', value: '3', image: 'img/mem.png' , color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
+            'ي': {note: 'B7', tone: '8n',symbole:'', note: 'B7', tone: '8n',symbole:'', value: '1', image: 'img/ya.png' , color: 'hsl(240, 70%, 50%)' }     // أزرق
+
+        },
+        'فرقان(5)': {
+                  
+            'أ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' },  // أحمر
+            'آ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'إ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ا': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ؤ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ء': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ئ': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ى': { note: 'C4', tone: '8n',symbole:'',value: '1', color: 'hsl(0, 70%, 50%)', image: 'img/a.png' }, // أحمر
+            'ح': {note: 'A4', tone: '8n',symbole:'', note: 'A4',  tone: '8n',symbole:'', value: '2', image: 'img/h.png' , color: 'hsl(75, 70%, 50%)' },      // أخضر فاتح
+            'ر': {note: 'E5', tone: '8n',symbole:'', note: 'E5', tone: '8n',symbole:'', value: '1', image: 'img/r.png'  , color: 'hsl(60, 70%, 50%)' },      // أصفر
+            'ص': {note: 'B5', tone: '8n',symbole:'', note: 'B5', tone: '8n',symbole:'', value: '1', image: 'img/sad.png' , color: 'hsl(300, 70%, 50%)' },     // أرجواني
+            'ع': {note: 'F6', tone: '8n',symbole:'', note: 'F6', tone: '8n',symbole:'', value: '1', image: 'img/aain.png', color: 'hsl(270, 70%, 50%)' },     // بنفسجي
+            'ق': {note: 'B6', tone: '8n',symbole:'', note: 'B6', tone: '8n',symbole:'', value: '1', image: 'img/qaf.png'  , color: 'hsl(150, 70%, 50%)' },     // أخضر مائل للأزرق
+            'ك': {note: 'C7', tone: '8n',symbole:'', note: 'C7', tone: '8n',symbole:'', value: '1', image: 'img/kaf.png' , color: 'hsl(120, 70%, 50%)' },     // أخضر
+            'ل': {note: 'D7', tone: '8n',symbole:'', note: 'D7', tone: '8n',symbole:'', value: '1', image: 'img/lm.png' , color: 'hsl(30, 70%, 50%)' },     // برتقالي
+            'م': {note: 'E7', tone: '8n',symbole:'', note: 'E7', tone: '8n',symbole:'', value: '2', image: 'img/mem.png' , color: 'hsl(200, 70%, 50%)' },    // أزرق فاتح
+            'ه': {note: 'G7', tone: '8n',symbole:'', note: 'G7', tone: '8n',symbole:'', value: '1', image: 'img/hh.png' , color: 'hsl(180, 70%, 50%)' },     // تركواز
+            'ي': {note: 'B7', tone: '8n',symbole:'', note: 'B7', tone: '8n',symbole:'', value: '1', image: 'img/ya.png' , color: 'hsl(240, 70%, 50%)' }     // أزرق
+
+        },
+        'فرقان(6)': {      
+            'ص': {note: 'B5', tone: '8n',symbole:'', note: 'B5', tone: '8n',symbole:'', value: '1', image: 'img/sad.png' , color: 'hsl(300, 70%, 50%)' },     // أرجواني
+
+        }
+    };
+
+    let notes = noteSets['عليون'];
+    let visualText = '';
+
+    const canvas43 = document.getElementById('geometrycanvas43');
+    const ctx43 = canvas43.getContext('2d');
+    const textInput = document.getElementById('textInput');
+    const toggleRepeat = document.getElementById('toggleRepeat');
+
+    function resizecanvas43() {
+        canvas43.width = canvas43.offsetWidth;
+        canvas43.height = canvas43.offsetHeight;
+        generateGeometricVisualization();
     }
-  }
 
-  if (points.length > 1) {
-    ctx43.beginPath();
-    ctx43.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < points.length; i++) {
-      ctx43.lineTo(points[i].x, points[i].y);
+    function generateGeometricVisualization() {
+        ctx43.clearRect(0, 0, canvas43.width, canvas43.height);
+        
+        const input = textInput.value;
+        const points = [];
+        
+        if (toggleRepeat.checked) {
+            visualText = '';
+            for (let char of input) {
+                if (notes[char] && notes[char].value) {
+                    visualText += char.repeat(parseInt(notes[char].value));
+                } else {
+                    visualText += char;
+                }
+            }
+        } else {
+            visualText = input;
+        }
+
+        for (let i = 0; i < visualText.length; i++) {
+            const char = visualText[i];
+            if (notes[char]) {
+                const x = canvas43.width - ((i + 1) * (canvas43.width / (visualText.length + 1)));
+                const y = canvas43.height - (Number(notes[char].value) * (canvas43.height / 30));
+
+                points.push({ x, y, char });
+
+                ctx43.beginPath();
+                ctx43.arc(x, y, 8, 0, Math.PI * 2);
+                ctx43.fillStyle = notes[char].color;
+                ctx43.fill();
+
+                ctx43.fillStyle = '#000';
+                ctx43.font = '14px Tajawal';
+                ctx43.textAlign = 'center';
+                ctx43.textBaseline = 'middle';
+                ctx43.fillText(char, x, y);
+            }
+        }
+
+        if (points.length > 1) {
+            ctx43.beginPath();
+            ctx43.moveTo(points[0].x, points[0].y);
+            for (let i = 1; i < points.length; i++) {
+                ctx43.lineTo(points[i].x, points[i].y);
+            }
+            ctx43.strokeStyle = 'gray';
+            ctx43.lineWidth = 1.5;
+            ctx43.setLineDash([5, 5]);
+            ctx43.stroke();
+            ctx43.setLineDash([]);
+        }
     }
-    ctx43.strokeStyle = 'gray';
-    ctx43.lineWidth = 1.5;
-    ctx43.setLineDash([5, 5]);
-    ctx43.stroke();
-    ctx43.setLineDash([]);
-  }
-}
-toggleRepeat.addEventListener('change', generateGeometricVisualization);
-textInput.addEventListener('input', generateGeometricVisualization);
-resizecanvas43();
-window.addEventListener('resize', resizecanvas43);
+
+    function changeNotesSet(setName) {
+        if (noteSets[setName]) {
+            notes = noteSets[setName];
+            generateGeometricVisualization();
+        }
+    }
+
+    toggleRepeat.addEventListener('change', generateGeometricVisualization);
+    textInput.addEventListener('input', generateGeometricVisualization);
+    window.addEventListener('resize', resizecanvas43);
+    resizecanvas43();
 </script>
 </body>
 </html>
-
